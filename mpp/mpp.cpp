@@ -785,7 +785,8 @@ MPP_RET Mpp::get_packet(MppPacket *packet)
         MppBuffer buf = impl->buffer;
         RK_U32 offset = (RK_U32)((char *)impl->pos - (char *)impl->data);
 
-        mpp_buffer_sync_ro_partial_begin(buf, offset, impl->length);
+        if (buf)
+            mpp_buffer_sync_ro_partial_begin(buf, offset, impl->length);
 
         mpp_dbg_pts("pts %lld\n", impl->pts);
     }
@@ -862,7 +863,8 @@ MPP_RET Mpp::get_packet_async(MppPacket *packet)
 
         impl = (MppPacketImpl *)pkt;
         offset = (RK_U32)((char *)impl->pos - (char *)impl->data);
-        mpp_buffer_sync_ro_partial_begin(impl->buffer, offset, impl->length);
+        if (impl->buffer)
+            mpp_buffer_sync_ro_partial_begin(impl->buffer, offset, impl->length);
     } else {
         AutoMutex autoFrameLock(mFrmIn->mutex());
 
