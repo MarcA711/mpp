@@ -782,6 +782,7 @@ static MPP_RET get_current_frame(Av1CodecContext *ctx)
     mpp_frame_set_content_light(frame->f, s->content_light);
 
     if (MPP_FRAME_FMT_IS_FBC(s->cfg->base.out_fmt)) {
+        RK_U32 fbc_hdr_stride = MPP_ALIGN(s->frame_width, 16);
         mpp_slots_set_prop(s->slots, SLOTS_HOR_ALIGN, hor_align_16);
         if (s->bit_depth == 10) {
             if ((ctx->pix_fmt & MPP_FRAME_FMT_MASK) == MPP_FMT_YUV420SP ||
@@ -795,6 +796,7 @@ static MPP_RET get_current_frame(Av1CodecContext *ctx)
         mpp_frame_set_offset_x(frame->f, 0);
         mpp_frame_set_offset_y(frame->f, 0);
         mpp_frame_set_ver_stride(frame->f, MPP_ALIGN(ctx->height, 8) + 28);
+        mpp_frame_set_fbc_hdr_stride(frame->f, fbc_hdr_stride);
     } else if (MPP_FRAME_FMT_IS_TILE(s->cfg->base.out_fmt)) {
         ctx->pix_fmt |= s->cfg->base.out_fmt & (MPP_FRAME_TILE_FLAG);
     }
